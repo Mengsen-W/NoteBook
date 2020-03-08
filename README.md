@@ -6,4 +6,4 @@
 
 ## [OpenSees](https://github.com/Mengsen-W/NoteBook/tree/master/OpenSees "OpenSees")
 
-## [Abaqus 二次开发]
+## [Abaqus 二次开发](https://github.com/Mengsen-W/Learning-Abaqus-of-Python "Abaqus")

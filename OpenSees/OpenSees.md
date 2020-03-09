@@ -1,5 +1,7 @@
 # 对 OpenSees 使用记录
 
+## OpenSees 发现了一个bug, 在 Ubuntu 18/ tcl8.6/ tcl 8.5/的环境下有一些材料无法加载, 我真是日了狗了
+
 ## [简单的算例设计方法](https://github.com/Mengsen-W/OpenSeesFiles/tree/master/Example-test "Example test")
 
 1. 默认的质量实际上不是进行重力分析，而是进行动力分析所有，重力分析要以加载力的方式进行。
@@ -40,7 +42,7 @@
 
 2. 对于 Steel02 的设置
    1. R0 越大会使整个滞回曲线向 x 轴压缩
-
+   2. cR1 控制卸载曲线的斜率，cR1 越大，越向原点收缩
 
 ### **(测试中... )**
 

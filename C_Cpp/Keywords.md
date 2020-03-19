@@ -84,8 +84,7 @@ struct alignas(1) U { S s;} //错误 U 以 1 字节方式对齐，与 S 对其�
 76. virtual 虚函数标志
 77. void 空类型
 78. volatile 通知**编译器不做优化**
-79. 
-_t 多字节的char
+79. wchar_t 多字节的char
 80. while 循环
 80. xor 等价于^
 81. xor_eq 等价于 ^=

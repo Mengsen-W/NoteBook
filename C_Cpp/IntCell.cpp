@@ -42,9 +42,6 @@ int main() {
   // IntCell a3{5};
 
   //!! 拷贝构造
-  // IntCell b1;
-  // IntCell b2(b1);
-  // IntCell b3 = b1;
 
   //!! 拷贝赋值
   // IntCell c1;

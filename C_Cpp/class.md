@@ -36,5 +36,32 @@ class Parent {
     2. 右值**没名字没地址有内容**，但是可以依靠**右值引用**
     3. **引用或指针**是**左值**
     4. **std::move()**把一个**左值**转化成一个**右值**
+    5. 对于一个右值可以传入**const引用**
+    ```c++
+    int print (const int& a) {
+      std::cout << a  << std::endl;
+    }
+    // 以下全部正确
+    int a = 10;
+    const int& bc = abc;
+    int& bcd = abc;
+    print(10);
+    print(bc);
+    print(abc);
+    print(bcd;
+    ```
 
 - **右值拷贝**和**右值赋值**
+    1. ClassName(const ClassName& rhs){}
+    2. ClassName(ClassName&& rhs){ // **注意右值销毁**，可以理解为**资源的转换**}
+       1. 当调用 std::move() 中会把**参数内容**完全**复制给结果**然后把**资源变为空资源或空指针**
+       2. 凡是调用了**资源转移**的类，之后就**不要使用**
+    3. ClassName& operator= (const ClassName& rhs){}
+    4. ClassName& operator= (ClassName&& rhs){}
+       1. 注意判断**左右**两个值是否是**同一个**
+
+- **析构函数**绝对不要**抛出异常**
+    1. 编译器做出的默认析构函数是**noexcept**，除非加入**noexcept(false)**
+    2. 编译器在**try...catch...**中**一次只能捕获一个异常**，若父子类都会抛出异常，可能不能处理这**两个异常**
+
+- **构造函数鼓励抛出异常**

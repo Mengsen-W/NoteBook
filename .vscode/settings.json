@@ -7,6 +7,16 @@
         "openat"
     ],
     "files.associations": {
-        "memory": "cpp"
+        "memory": "cpp",
+        "array": "cpp",
+        "deque": "cpp",
+        "list": "cpp",
+        "vector": "cpp",
+        "xstring": "cpp",
+        "xtree": "cpp",
+        "xutility": "cpp",
+        "forward_list": "cpp",
+        "initializer_list": "cpp",
+        "xhash": "cpp"
     }
 }

@@ -17,30 +17,84 @@ class Object {
   int m_id = 0;
 };
 typedef std::shared_ptr<Object> ObjectPtr;
+typedef std::unique_ptr<Object> UniqueObjectPtr;
+void print(const UniqueObjectPtr& obj) {}
+void transfer(UniqueObjectPtr obj) {
+  std::cout << "obj.id() = " << obj->id() << std::endl;
+}
+void uniquePtr() {
+  UniqueObjectPtr obj(new Object(1));
+  auto p = obj.get();  // operator bool
+  // 得到裸指针
+  if (p) {
+  }
+  // more better
+  if (obj) {
+  }
+
+  // operator-> *
+  std::cout << "p->id() = " << p->id() << '\n'
+            << "obj->id() = " << obj->id() << '\n'
+            << "(*obj).id() = " << (*obj).id() << std::endl;
+  print(obj);
+  // 释放指针，交给系统或其他人管理，指针置空
+  // 等价 obj.reset(nullptr);
+  p = obj.release();
+  delete p;
+  obj.reset();
+  obj.reset(new Object(2));  // 释放原有资源，管理新的指针
+  // UniqueObjectPtr(const UniqueObjectPtr&) =delete;
+  // UniqueObjectPtr(UniqueObjectPtr&&) = default;
+  // 将资源转移
+  transfer(std::move(obj));
+  assert(obj == nullptr);
+  // std::cout << "obj.id() = " << obj->id() << std::endl;
+
+  obj.reset(new Object(3));
+  // 转移资源
+  ObjectPtr sharedObj(std::move(obj));
+  assert(obj == nullptr);
+}
 
 class Parent;
 typedef std::shared_ptr<Parent> ParentPtr;
 typedef std::weak_ptr<Parent> WeakParent;
-class Child {
+class Child : public std::enable_shared_from_this<Child> {
  public:
   WeakParent father;
   Child();
   ~Child();
+  void checkRelation();
 };
 
 typedef std::shared_ptr<Child> ChildPtr;
 typedef std::weak_ptr<Child> WeakChild;
-class Parent {
+class Parent : public std::enable_shared_from_this<Parent> {
  public:
-  ChildPtr son;
+  WeakChild son;
   Parent();
   ~Parent();
+  void checkRelation();
 };
 
 Child::Child() { std::cout << "hi child \n"; }
 Child::~Child() { std::cout << "bye child \n"; }
 Parent::Parent() { std::cout << "hi parent \n"; }
 Parent::~Parent() { std::cout << "bye parent \n"; }
+void handleChildAndParent(const ParentPtr&, const ChildPtr&);
+void Parent::checkRelation() {
+  auto ps = son.lock();
+  // 不靠谱的做法 ParentPtr p (this)
+  // p 的析构调用了三次
+  // 出if的作用域会调用一次析构
+  if (ps) {
+    handleChildAndParent(shared_from_this(), ps);
+  }
+  std::cout << "after call checkRelation\n";
+}
+void Child::checkRelation() {
+  // we call handleChildANdParent
+}
 
 static void testParentAndChild() {
   ParentPtr p(new Parent());
@@ -52,6 +106,7 @@ static void testParentAndChild() {
   // 类似死锁
   std::cout << "p.use_count() = " << p.use_count() << std::endl;
   std::cout << "c.use_count() = " << c.use_count() << std::endl;
+  p->checkRelation();
 }
 
 static void sharedPtrWithWeakPtr() {
@@ -142,9 +197,31 @@ static void sharedPtrWithWeakPtr() {
   }
 }
 
+void handleChildANdParentRef(const Parent& p, const Child& c) {
+  auto cp = c.father.lock();
+  auto pc = p.son.lock();
+  if (cp.get() == &p && pc.get() == &c) {
+    std::cout << "right relation\n";
+  } else {
+    std::cout << "oop!!!\n";
+  }
+}
+
+void handleChildAndParent(const ParentPtr& p, const ChildPtr& c) {
+  // 传入引用减少拷贝次数
+  auto pc = p->son.lock();
+  auto cp = c->father.lock();
+  if (cp == p && pc == c) {
+    std::cout << "right relation\n";
+  } else {
+    std::cout << "oop!!!\n";
+  }
+}
+
 int main() {
-  testParentAndChild();  // 循环引用
+  // testParentAndChild();  // 循环引用
   // sharedPtrWithWeakPtr();
+  uniquePtr();
 
   return 0;
 }

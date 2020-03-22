@@ -2,7 +2,7 @@
  * @Author: Mengsen.Wang
  * @Date: 2020-03-21 12:00:17
  * @Last Modified by: Mengsen.Wang
- * @Last Modified time: 2020-03-21 12:20:14
+ * @Last Modified time: 2020-03-22 10:20:14
  */
 #include <algorithm>
 #include <array>
@@ -27,9 +27,7 @@ static void listPart();
 static void forward_list();
 static void mapPart();
 static void setPart();
-static void unorderedMapPart();
-static void unorderedSetPart();
-static void stlAlgorithm();
+static void unorderedMapAndSetPart();
 
 int main() {
   // arrayPart();
@@ -37,11 +35,9 @@ int main() {
   // dequePart();
   // listPart();
   // forward_list();
-  setPart();
-  mapPart();
-  unorderedSetPart();
-  unorderedMapPart();
-  stlAlgorithm();
+  // setPart();
+  // mapPart();
+  unorderedMapAndSetPart();
 
   return 0;
 }
@@ -525,4 +521,166 @@ void setPart() {
   // return pair<iterator, bool>
   auto state = b.insert(100.0f);
   g.insert(c.begin(), c.end());
+}
+
+// mapPart
+void mapPart() {
+  using Group = std::map<int, std::string>;
+  Group a;      // 0 element
+  Group b = a;  // copy
+  Group c(a);   // copy
+  Group d(c.begin(), c.end());
+  Group g{{1, "a"}, {2, "test"}, {3, "test"}};  // list init 排序
+
+  d.empty();  // is empty? true : false
+  d.size();
+  d.max_size();  // Maximun capacity of all of memory, maybe infinite
+
+  // Compare,对于 set 下面两个是一个东西
+  auto keycomp = c.key_comp();
+  auto valuecomp = c.value_comp();
+
+  // operator == != < > <= >=
+
+  // assign
+  b = g;
+
+  // swap
+  b.swap(a);   // very efficiention and don't throw exception
+  swap(a, b);  // just swap pointer
+
+  // iterator
+  a.begin();   // return head iterator
+  a.end();     // return behind of tail
+  a.cbegin();  // return head const_iterator
+  a.cend();
+  a.rbegin();
+  a.rend();
+  a.crbegin();
+  a.crend();
+  auto iterBegin = a.begin();
+
+  b.clear();  // no memory change
+
+  // algorithm
+  // set count 0 1
+  // multiset count >= 0
+  auto num = a.count(1.0f);
+  // set 和 multiset 返回一致
+  auto findIter = a.find(1.0f);
+  if (findIter != a.end()) {
+    // return std::pair<const int, std::string>&
+    // 注意pair.first 是 可能导致多复制一个临时变量
+  }
+
+  // 插入已经存在的一个值会导致下面几种方法返回值不一致
+  // 对于一个已经存在的值
+  // lower 返回相等位置
+  // high 返回相等的下一个位置
+  // equal 返回上面两个值的区间
+  auto lower = a.lower_bound(1);  // 第一个可插入点
+  // 没内存可能插不进
+  if (lower != a.end()) {
+    if (lower->first == 1) {
+      // has 1
+    }
+  }
+  auto high = a.upper_bound(1.0f);   // 最后一个可插入点
+  auto equal = a.equal_range(1.0f);  // 返回一个pair
+
+  auto eraseIter = b.erase(b.begin(), b.end());
+  // return pair<iterator, bool>
+  auto state = b.insert(std::make_pair(100, "good"));  // iterator
+  auto insertIter = b.insert(b.begin(), {5, "a"});
+  b.insert(g.begin(), g.end());  // return void
+  b.emplace(std::make_pair(10, "has it"));
+  // b.emplace(std::pair<const int, std::sting>)
+  b.emplace(15, "asd");
+  b.emplace_hint(b.end(), 17, "aaa");
+
+  // [] meaning find(map.key == 10) return value
+  auto& info = b[10];
+  // b.insert(std::make_pair(13, std::string())) return iter.second
+  b[13];
+
+  // at
+  // if find key = 10 return & else return exception
+  auto& findInfo = b.at(10);
+}
+
+// unorderedMapPartAndSetPart
+void unorderedMapAndSetPart() {
+  using Group = std::unordered_map<int, std::string>;
+  Group a;      // 0 element
+  Group b = a;  // copy
+  Group c(a);   // copy
+  Group d(c.begin(), c.end());
+  Group g{{1, "a"}, {2, "test"}, {3, "test"}};  // list init 排序
+
+  d.empty();  // is empty? true : false
+  d.size();
+  d.max_size();  // Maximun capacity of all of memory, maybe infinite
+
+  // operator == != < > <= >=
+
+  // assign
+  b = g;
+
+  // swap
+  b.swap(a);   // very efficiention and don't throw exception
+  swap(a, b);  // just swap pointer
+
+  // iterator
+  a.begin();   // return head iterator
+  a.end();     // return behind of tail
+  a.cbegin();  // return head const_iterator
+  a.cend();
+  auto iterBegin = a.begin();
+
+  b.clear();  // no memory change
+
+  // algorithm
+  // set count 0 1
+  // multiset count >= 0
+  auto num = a.count(1.0f);
+  // set 和 multiset 返回一致
+  auto findIter = a.find(1.0f);
+  if (findIter != a.end()) {
+    // return std::pair<const int, std::string>&
+    // 注意pair.first 是 可能导致多复制一个临时变量
+  }
+
+  // 插入已经存在的一个值会导致下面几种方法返回值不一致
+  // 对于一个已经存在的值
+  // lower 返回相等位置
+  // high 返回相等的下一个位置
+  // equal 返回上面两个值的区间
+  auto lower = a.lower_bound(1);  // 第一个可插入点
+  // 没内存可能插不进
+  if (lower != a.end()) {
+    if (lower->first == 1) {
+      // has 1
+    }
+  }
+  auto high = a.upper_bound(1.0f);   // 最后一个可插入点
+  auto equal = a.equal_range(1.0f);  // 返回一个pair
+
+  auto eraseIter = b.erase(b.begin(), b.end());
+  // return pair<iterator, bool>
+  auto state = b.insert(std::make_pair(100, "good"));  // iterator
+  auto insertIter = b.insert(b.begin(), {5, "a"});
+  b.insert(g.begin(), g.end());  // return void
+  b.emplace(std::make_pair(10, "has it"));
+  // b.emplace(std::pair<const int, std::sting>)
+  b.emplace(15, "asd");
+  b.emplace_hint(b.end(), 17, "aaa");
+
+  // [] meaning find(map.key == 10) return value
+  auto& info = b[10];
+  // b.insert(std::make_pair(13, std::string())) return iter.second
+  b[13];
+
+  // at
+  // if find key = 10 return & else return exception
+  auto& findInfo = b.at(10);
 }

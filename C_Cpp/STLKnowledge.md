@@ -1,6 +1,6 @@
 # 容器/迭代器/算法
 ---
-1. ## 顺序容器--数组或指针--遍历快空间小
+1. ## 顺序容器--数组或指针--遍历快空间小 O(N)
    1. array--对数组的封装，内存分配在栈，绝对不会重新分配，随机访问元素，不能改变大小，速度和原生速度相差不多
       - template<typename T, size_t N>
       - 异常：异常若元素本身的move copy 不会抛出异常，则 array 不抛出异常
@@ -20,7 +20,7 @@
    9.  string
    10. bitset
 ---
-2. ## 关联容器--平衡二叉树--排序查找块
+2. ## 关联容器--平衡二叉树--排序查找块 O(logN)
    1. set--红黑树单值
       - template<typename T, typename Compare = less<T>, typename Allocator = allocator<T> >
       - 元素自动排序
@@ -33,11 +33,14 @@
    2. multiset--红黑树多值
    3. map--特点和set基本一致但是可以自定value值
       - template<typename Key, typename T, typename Compare = less<T> ,typename Allocator = allocator<pair <const Key ,T>>
+      - 分为key和value，查找key返回位置包括key和value
    4. multimap
 ---
-3. ## 无序容器--hash_table--遍历快查找快
-   1. unordered_set
-   2. unordered_map
+3. ## 无序容器--hash_table--遍历快查找快，均摊时间O(1) 空间花费大
+   1. unordered_map--hash_table
+      - template< typename Key, typename T, typename Hash = hash<Key> ,typename EqPred = equal_to<T>, typename Allocator = allocator<T> >
+      - 可以理解为一种快速的map/set
+   2. unordered_set--hash_table
    3. unordered_multimap
    4. unordered_multiset
 ---

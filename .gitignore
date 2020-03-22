@@ -1,4 +1,5 @@
 .History
 .vscode
+*.json
 .VScodeCounter
 *.exe

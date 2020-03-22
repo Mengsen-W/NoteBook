@@ -17,6 +17,7 @@
         "xutility": "cpp",
         "forward_list": "cpp",
         "initializer_list": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "type_traits": "cpp"
     }
 }

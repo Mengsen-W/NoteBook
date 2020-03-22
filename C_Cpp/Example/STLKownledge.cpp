@@ -684,3 +684,40 @@ void unorderedMapAndSetPart() {
   // if find key = 10 return & else return exception
   auto& findInfo = b.at(10);
 }
+
+class Position {
+ public:
+  int x() const { return m_x; }
+  int y() const { return m_y; }
+  Position(int _x, int _y) : m_x(_x), m_y(_y) {}
+
+ private:
+  int m_x = 0;
+  int m_y = 0;
+};
+
+// hash 算法
+// boost
+template <class T>
+inline void hash_combine(std::size_t& seed, const T& v) {
+  std::hash<T> hasher;
+  seed ^= hasher(v) + 0x9e3779b9 + (seed << 6) + (seed << 2);
+}
+namespace std {
+// template <typename T>
+// struct hash {};
+// 模版类特化
+template <>
+struct hash<Position> {
+  size_t operator()(const Position& p) const {
+    // 一个对象调用重载
+    // hash<int> hash_int;
+    // auto key = hash_int((p.x()));
+    //一个类调用重载
+    auto key = hash<int>()(p.x());
+    hash_combine(key, p.y());
+    return key;
+  }
+};
+
+}  // namespace std

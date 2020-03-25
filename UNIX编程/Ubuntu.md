@@ -12,10 +12,15 @@
 9. apt install autoconf
 10. apt install ragel
 11. apt install psmisc
-12. apt install openssl-devel
+12. apt install openssl
 13. apt install libssl-dev
 14. apt install net-tools
 15. apt install htop
+16. apt install libprotobuf-dev
+17. apt install protobuf-compiler
+18. apt install cppcheck
+19. apt install ninja-build
+20. apt install clang
 
 ## zsh
 1. apt install zsh
@@ -49,27 +54,30 @@
    6. cp -r include /usr/include/...
    7. 要不就apt install gdb 然后一个一个软连接过去 我懒得弄了
 
+### 太长不看版
+1. sudo apt update
+2. sudo apt install build-essential
+3. sudo apt install software-properties-common
+4. sudo add-apt-repository ppa:ubuntu-toolchain-r/test
+5. sudo apt install gcc-7 g++-7 gcc-8 g++-8 gcc-9 g++-9
+6. sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 90 --slave /usr/bin/g++ g++ /usr/bin/g++-9
+7. sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 80 --slave /usr/bin/g++ g++ /usr/bin/g++-8
+8. sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-7 70 --slave /usr/bin/g++ g++ /usr/bin/g++-7
+9. sudo update-alternatives --config gcc
+10. gcc --version
+11. apt install gdb
 
 ## node 环境
 1. apt install nodejs
 2. apt install npm
 3. npm install -g n
 4. n lts
-5. n lts
-6. node -v
-7. npm i -g npm
-8. npm config set registry https://registry.npm.taobao.org
-9. npm install -g cnpm --registry=https://registry.npm.taobao.org
-10. cnpm install -g hexo-cli
+5. node -v
+6. npm i -g npm
+7. npm config set registry https://registry.npm.taobao.org
+8. npm install -g cnpm --registry=https://registry.npm.taobao.org
+9. cnpm install -g hexo-cli
 
-## 太长不看版
-1. 下包
-2. 拆包
-3. 看依赖条件
-4. 配置
-5. make
-6. 直接复制过去吧
-7. 写echoPATH和次conf
 
 ## 一点都不想弄版
 1. 大神没时间 --- 去Docker找个配置好的

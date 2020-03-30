@@ -1,0 +1,43 @@
+# GCC/GDB 操作
+---
+## GCC 操作
+1. 静态库制作--打包到可执行文件
+    1. gcc -c *.c 生成 .o
+    2. ar rcs + 名字 + 打包文件
+    3. gcc main.c lib/lib.a -I ./include/header.h -o main.out 或者
+      1. gcc main.c -I include/header.h -L lib/ -llib.a -o main.out
+2. 共享库制作--随程序运行加载
+    1. gcc -fPIC -c *.c -I ./include/
+    2. gcc -shared -o lib.so *.o -I ./include/header.h
+    3. export LD_LIBRARY_PATH=./lib
+      1. 导入后重启终端就会失效，写入 .bashrc 会永久设置，或者复制到 /lib
+    4. 修改动态链接器的配置文件(推荐)
+    5. vim /etc/ld.so.conf 加入自己的动态库链接
+    6. ldconfig -v 查看全部动态库更新
+    7. gcc main.c lib/lib.a -I ./include/header.h -o main.out 或者
+    8. gcc main.c -I include/header.h -L lib/ -l lib.so -o main.out
+
+---
+## GBD 操作
+1. list 命令
+   1. list 查看源代码 只有 main 文件
+   2. list + 文件名字 : 行数/函数名
+   3. list 继续列出该函数的下面内容
+2. 断点设置 break + 行数
+   1. 条件断点 break + 行数 if 条件(例如i==15)
+   2. break filename: 行号(函数名)
+   3. 去断点才能跳出循环 delete + 删除断点编号 (info 里查)
+3. 查看信息 info + 类型(例如 break 查看断点信息)
+4. 单步进入 start
+   1. 单步调试不进入函数体 next
+   2. 继续执行直到断点 continue
+   3. 进入函数体内部 step
+   4. 显示代码 list
+   5. print 变量名 查看值
+   6. ptype 变量名 查看类型
+   7. 追踪变量的值 display 变量名 / 不追踪 undisplay + 变量编号 (变量编号用 info display 查看)
+   8. u 跳出单次循环
+   9. finish 跳出函数
+   10. 设置变量值 set var 变量名=设定值
+5. quit 退出
+6. r + 参数执行

@@ -92,3 +92,31 @@ ioctl() //IO操作的工具箱
     - 一个磁盘驱动器经常包含若干个文件系统。在同一磁盘驱动器上的各文件系统通常具有相同的主设备号，但是次设备号却不同。
     - 系统中与每个文件名关联的 st_dev 值是文件系统的设备号，该文件系统包含了这一文件名以及与其对应的i节点。
     - 只有字符特殊文件和块特殊文件才有st_rdev值。此值包含实际设备的设备号。
+---
+
+### 3. 标准IO
+- 标准I/O库提供缓冲的目的是尽可能减少使用read和write调用的次数, 提供了一个缓冲区设定
+- fwide--可用于设置流的定向，当最后一个参数为0时可以返回方向的信息
+- setbuf-- 设定缓冲区
+- fflush--冲洗缓冲区
+- fopen--打开流
+- getc/fgets--读流
+- putc/fputs--写流
+- fread/fwrite--二进制读写流
+- ftell/fseek/ftello/fseeko/fgetpos/fsetpos 定位流
+- printf格式化输出
+- tmpnam/mkdtemp创建临时文件/目录
+- fmemopen 内存流--所有的I/O都是通过在缓冲区与主存之间来回传送字节来完成的。我们将看到，即便这些流看起来像文件流，它们的某些特征使其更适用于字符串操作
+---
+
+### 4. 系统数据文件和信息
+- UNIX 系统口令文件这些字段包含在<pwd.h>中定义的passwd结构中。
+- struct passwd *getpwuid(uid_t uid)/struct passwd *getpwnam(const char *name)--返回登陆账号或姓名的口令文件
+- truct passwd *getpwent(void)/void setpwent(void)/void endpwent(void)-- 直接查看登录的全部用户口令文件
+- struct spwd *getspnam(const char *name)/struct spwd *getspent(void)/void setspent(void)/void endspent(void)--从阴影口令文件获得
+- struct group *getgrgid(gid_t gid)/struct group *getgrnam(const char *name)/struct group *getgrent(void)/void setgrent(void)/void endgrent(void)--返回组文件信息
+- int getgroups(int gidsetsize, gid_t grouplist[])/int setgroups(int ngroups, const gid_t grouplist[])/int initgroups(const char *username, gid_t basegid)--返回附属组文件信息
+- utmp文件记录当前登录到系统的各个用户；wtmp文件跟踪各个登录和注销事件--char ut_line[8]/char ut_name[8]/long　ut_time;
+- int uname(struct utsname *name)它返回与主机和操作系统有关的信息
+- time_t time(time_t *calptr)--日历时间；int clock_gettime(clockid_t clock_id, struct timespec *tsp)--文件时间
+---

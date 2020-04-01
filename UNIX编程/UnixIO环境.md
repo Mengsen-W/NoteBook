@@ -34,6 +34,7 @@ ioctl() //IO操作的工具箱
 - S_ISVTX 设置黏着位 常驻交换区
 - truncate 文件扩展 不需要写操作
 - link 创建硬链接
+- unlink 实际上也是一个删除对于软硬连都适用
 - rename 更改文件名
 - symlink 软链接
 - futimens/utimensat 修改文件时间

@@ -41,3 +41,5 @@
    10. 设置变量值 set var 变量名=设定值
 5. quit 退出
 6. r + 参数执行
+7. set follow-fork-mode child 跟踪子进程
+8. set follow-fork-mode parent 跟踪父进程

@@ -47,7 +47,7 @@ target = app
 CPPFLAGS = -I
 
 $(target):$(obj)
-  $(CC $(obj) -o $(target)
+  $(CC) $(obj) -o $(target)
 %.c:%.o
   $(CC) -c $< -o $@
 

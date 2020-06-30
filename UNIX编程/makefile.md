@@ -1,6 +1,7 @@
 # makefile 编写
 ---
 ## makefile 基础
+0. makefile 第一优先级 Makefile 第二优先级 其他的都不管用
 1. makefile 的编写
    1. 自定义变量 obj=xxx 直接写 以后用到需要 &(obj)
    2. 系统维护的变量

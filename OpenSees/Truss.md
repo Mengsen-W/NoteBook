@@ -12,6 +12,71 @@ class Node;               // 节点类
 class Channel;            // 维护实体
 class UniaxialMaterial;   // 材料类
 ```
+3. Element 虚函数
+```c++
+// methods dealing with nodes and number of external dof
+virtual int getNumExternalNodes(void) const =0;
+virtual const ID &getExternalNodes(void)  =0; 
+virtual Node **getNodePtrs(void)  =0; 
+virtual int getNumDOF(void) =0;
+virtual double getCharacteristicLength(void);
+
+// methods dealing with committed state and update
+virtual int commitState(void);    
+virtual int revertToLastCommit(void) = 0;        
+virtual int revertToStart(void);                
+virtual int update(void);
+virtual bool isSubdomain(void);
+
+// methods to return the current linearized stiffness,
+// damping and mass matrices
+virtual const Matrix &getTangentStiff(void) =0;
+virtual const Matrix &getInitialStiff(void) =0;
+virtual const Matrix &getDamp(void);    
+virtual const Matrix &getMass(void);
+virtual const Matrix &getGeometricTangentStiff();
+
+// methods for applying loads
+virtual void zeroLoad(void);  
+virtual int addLoad(ElementalLoad *theLoad, double loadFactor);
+virtual int addLoad(ElementalLoad *theLoad, const Vector &loadFactors);
+
+virtual int addInertiaLoadToUnbalance(const Vector &accel);
+virtual int setRayleighDampingFactors(double alphaM, double betaK, double betaK0, double betaKc);
+
+// methods for obtaining resisting force (force includes elemental loads)
+virtual const Vector &getResistingForce(void) =0;
+virtual const Vector &getResistingForceIncInertia(void);        
+
+// method for obtaining information specific to an element
+virtual Response *setResponse(const char **argv, int argc, 
+                              OPS_Stream &theHandler);
+virtual int getResponse(int responseID, Information &eleInformation);
+virtual int getResponseSensitivity(int responseID, int gradIndex,
+                                   Information &eleInformation);
+
+virtual int displaySelf(Renderer &, int mode, float fact, const char **displayModes=0, int numModes=0);
+
+// AddingSensitivity:BEGIN //////////////////////////////////////////
+virtual int addInertiaLoadSensitivityToUnbalance(const Vector &accel, bool tag);
+virtual const Vector & getResistingForceSensitivity(int gradIndex);
+virtual const Matrix & getTangentStiffSensitivity(int gradIndex);
+virtual const Matrix & getInitialStiffSensitivity(int gradIndex);
+virtual const Matrix & getCommittedStiffSensitivity(int gradIndex);
+virtual const Matrix & getDampSensitivity(int gradIndex);
+virtual const Matrix & getMassSensitivity(int gradIndex);
+virtual int   commitSensitivity(int gradIndex, int numGrads);
+// AddingSensitivity:END ///////////////////////////////////////////
+
+virtual int addResistingForceToNodalReaction(int flag);
+
+virtual int storePreviousK(int numK);
+virtual const Matrix *getPreviousK(int num);
+
+const Vector &getRayleighDampingForces(void);
+double alphaM, betaK, betaK0, betaKc;
+
+```
 
 ## 2. 成员变量
 ```c++
@@ -32,13 +97,13 @@ int cMass;              // consistent mass flag
 
 double cosX[3];  // direction cosines
 
-Node *theNodes[2];
-double *initialDisp;
+Node *theNodes[2];    // Node id
+double *initialDisp;  // initial displacement
 
-// AddingSensitivity:BEGIN //////////////////////////////////////////
+// AddingSensitivity:BEGIN
 int parameterID;
 Vector *theLoadSens
-// AddingSensitivity:END ///////////////////////////////////////////
+// AddingSensitivity:END
 
 // static data - single copy for all objects of the class
 static Matrix trussM2;   // class wide matrix for 2*2
@@ -52,3 +117,33 @@ static Vector trussV12;  // class wide Vector for size 12
 ```
 
 ## 3. 成员函数
+```c++
+OPS_Export void *
+OPS_TrussElement(); // 用于TCL调用
+
+#include ".../TclElementCommands.cpp"
+#include ".../OpenSeesElementComands.cpp"
+#include "OpenSeesPy/.../TclElementCommands.cpp"
+#include "OpenSeesPy/.../OpenSeesElementComands.cpp"
+```
+- 注意这里的RemainingArgs 是除了 element truss 之外所有的输入选项，包括 -rho 等
+- numData 表示获取参数的数量
+- iData[3] 是前三个参数 tag iNode jNode
+- OPS_Get\*(); return 0 success 并且可以自动移动指针
+
+```c++
+Truss::Truss(int tag. int dim, int Nd1, int Nd2, UniaxialMaterial &theMat,
+             double a, double r, int damp, int cm);
+```
+
+
+
+
+
+
+
+
+
+
+
+

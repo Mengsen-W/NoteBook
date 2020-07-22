@@ -126,16 +126,20 @@ OPS_TrussElement(); // 用于TCL调用
 #include "OpenSeesPy/.../TclElementCommands.cpp"
 #include "OpenSeesPy/.../OpenSeesElementComands.cpp"
 ```
-- 注意这里的RemainingArgs 是除了 element truss 之外所有的输入选项，包括 -rho 等
-- numData 表示获取参数的数量
-- iData[3] 是前三个参数 tag iNode jNode
-- OPS_Get\*(); return 0 success 并且可以自动移动指针
 
+1. 存储数据结构
 ```c++
-Truss::Truss(int tag. int dim, int Nd1, int Nd2, UniaxialMaterial &theMat,
-             double a, double r, int damp, int cm);
+data(0) = getTag (Element Tag)
+data(1) = dimension
+data(2) = numDOF
+data(3) = A
+data(4) = MaterialTag
+date(5) = MaterialDbTag
+data(6) = rho
+data(7) = doRayleighDamping
+data(8) = cMass
+date(9 ~ ...) = displacement
 ```
-
 
 
 

@@ -1,4 +1,4 @@
-# 学习 truss 单元
+# 学习单元构建
 
 ## 1. 先期准备
 1. 包含头文件
@@ -16,15 +16,15 @@ class UniaxialMaterial;   // 材料类
 ```c++
 // methods dealing with nodes and number of external dof
 virtual int getNumExternalNodes(void) const =0;
-virtual const ID &getExternalNodes(void)  =0; 
-virtual Node **getNodePtrs(void)  =0; 
+virtual const ID &getExternalNodes(void)  =0;
+virtual Node **getNodePtrs(void)  =0;
 virtual int getNumDOF(void) =0;
 virtual double getCharacteristicLength(void);
 
 // methods dealing with committed state and update
-virtual int commitState(void);    
-virtual int revertToLastCommit(void) = 0;        
-virtual int revertToStart(void);                
+virtual int commitState(void);
+virtual int revertToLastCommit(void) = 0;
+virtual int revertToStart(void);
 virtual int update(void);
 virtual bool isSubdomain(void);
 
@@ -32,12 +32,12 @@ virtual bool isSubdomain(void);
 // damping and mass matrices
 virtual const Matrix &getTangentStiff(void) =0;
 virtual const Matrix &getInitialStiff(void) =0;
-virtual const Matrix &getDamp(void);    
+virtual const Matrix &getDamp(void);
 virtual const Matrix &getMass(void);
 virtual const Matrix &getGeometricTangentStiff();
 
 // methods for applying loads
-virtual void zeroLoad(void);  
+virtual void zeroLoad(void);
 virtual int addLoad(ElementalLoad *theLoad, double loadFactor);
 virtual int addLoad(ElementalLoad *theLoad, const Vector &loadFactors);
 
@@ -46,7 +46,7 @@ virtual int setRayleighDampingFactors(double alphaM, double betaK, double betaK0
 
 // methods for obtaining resisting force (force includes elemental loads)
 virtual const Vector &getResistingForce(void) =0;
-virtual const Vector &getResistingForceIncInertia(void);        
+virtual const Vector &getResistingForceIncInertia(void);
 
 // method for obtaining information specific to an element
 virtual Response *setResponse(const char **argv, int argc, 
@@ -140,14 +140,19 @@ data(7) = doRayleighDamping
 data(8) = cMass
 date(9 ~ ...) = displacement
 ```
-
-
-
-
-
-
-
-
-
-
-
+```c++
+data(0) = this->getTag();
+data(1) = numDIM;
+data(2) = numDOF;
+data(3) = numDIR;
+data(4) = x.Size();
+data(5) = y.Size();
+data(6) = Mratio.Size();
+data(7) = shearDistI.Size();
+data(8) = addRayleigh;
+data(9) = mass;
+data(10) = alphaM;
+data(11) = betaK;
+data(12) = betaK0;
+data(13) = betaKc;
+```

@@ -1,13 +1,24 @@
+<!--
+ * @Date: 2021-03-11 15:22:20
+ * @Author: mengsen
+ * @LastEditors: mengsen
+ * @LastEditTime: 2021-03-11 17:10:29
+ * @FilePath: \NoteBook\Socket\BerkeleySockets.md
+ * @Description: file content
+-->
+
 # 伯克利Socket
 
 ## 头文件
-1. sys/socket.h     // 函数和数据结构定义
-2. netinet/in.h     // IPv4和IPv6相关协议族信息
-3. sys/un.h         // Unix 机器间通信的相关信息
-4. arpa/inet.h      // 处理数字从操作系统字节序列到网络字节序--从小端到大端
-5. netdb.h          // 映射服务到IP地址
+
+01. sys/socket.h     // 函数和数据结构定义
+02. netinet/in.h     // IPv4和IPv6相关协议族信息
+03. sys/un.h         // Unix 机器间通信的相关信息
+04. arpa/inet.h      // 处理数字从操作系统字节序列到网络字节序--从小端到大端
+05. netdb.h          // 映射服务到IP地址
 
 ## API函数
+
 1. socket()         // 创建socket
 2. bind()           // 绑定socket到IP地址和端口
 3. listen()         // 服务器监听客户端的连接

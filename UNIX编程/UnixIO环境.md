@@ -1,23 +1,31 @@
 # Unix 环境编程
 
 ## 1. 文件系统
+
 ---
 ---
+
 ### 1. vNode文件表项
+
 1. 文件的操作依赖于文件描述符，在Unix中文件描述符是在一个文件的唯一标识。
 2. 内核维护了一个打开文件表，存在在打开文件描述符和文件表项，显示的保存在 /dev/fd中。
 3. 一个进程维护打开文件表，表项包括文件描述符和指向文件表项的指针，文件表项的指针由系统的打开文件表项维护。
 4. 在一个Unix中，文件的操作包括以下几种
+
 ```c++
 open()/openat() // 打开操作
+
                 // 可以和creat()函数合并为一个原子操作
+
 creat() // 创建文件
 close() // 关闭文件，小心内存泄漏
 read()/write()  // 读写操作
 dup()/dup2()    // 复制文件描述符
 sync()/fsync()/fdatasync()  // 磁盘存储方式
+
                             //是否经过缓冲区
                             //是否修改权限
+
 lseek()                     // 修改当前文件偏移量
 fcntl() // 改变打开文件的属性
 ioctl() //IO操作的工具箱
@@ -26,21 +34,22 @@ ioctl() //IO操作的工具箱
 ---
 
 ### 2. iNode文件信息
-- stat 第一个参数是文件名，第二个参数是传入数据的结构体，OS会把关于文件的信息写入这个结构体
-- access 是检查文件权限的函数
-- umask 设置屏蔽字
-- chmod 修改文件访问权限
-- chown 修改文件的组/用户id
-- S_ISVTX 设置黏着位 常驻交换区
-- truncate 文件扩展 不需要写操作
-- link 创建硬链接
-- unlink 实际上也是一个删除对于软硬连都适用
-- rename 更改文件名
-- symlink 软链接
-- futimens/utimensat 修改文件时间
-- mkdir/rmdir 创建/删除目录
-- opendir/fdopendir/... 与文件操作类似
-- chdir/getcwd 改变进程当前工作目录/得到工作目录绝对路径
+
+* stat 第一个参数是文件名，第二个参数是传入数据的结构体，OS会把关于文件的信息写入这个结构体
+* access 是检查文件权限的函数
+* umask 设置屏蔽字
+* chmod 修改文件访问权限
+* chown 修改文件的组/用户id
+* S_ISVTX 设置黏着位 常驻交换区
+* truncate 文件扩展 不需要写操作
+* link 创建硬链接
+* unlink 实际上也是一个删除对于软硬连都适用
+* rename 更改文件名
+* symlink 软链接
+* futimens/utimensat 修改文件时间
+* mkdir/rmdir 创建/删除目录
+* opendir/fdopendir/... 与文件操作类似
+* chdir/getcwd 改变进程当前工作目录/得到工作目录绝对路径
 
 1. Unix 中文件类型分为
     - 普通文件：内容是数据
@@ -93,31 +102,36 @@ ioctl() //IO操作的工具箱
     - 一个磁盘驱动器经常包含若干个文件系统。在同一磁盘驱动器上的各文件系统通常具有相同的主设备号，但是次设备号却不同。
     - 系统中与每个文件名关联的 st_dev 值是文件系统的设备号，该文件系统包含了这一文件名以及与其对应的i节点。
     - 只有字符特殊文件和块特殊文件才有st_rdev值。此值包含实际设备的设备号。
+
 ---
 
 ### 3. 标准IO
-- 标准I/O库提供缓冲的目的是尽可能减少使用read和write调用的次数, 提供了一个缓冲区设定
-- fwide--可用于设置流的定向，当最后一个参数为0时可以返回方向的信息
-- setbuf-- 设定缓冲区
-- fflush--冲洗缓冲区
-- fopen--打开流
-- getc/fgets--读流
-- putc/fputs--写流
-- fread/fwrite--二进制读写流
-- ftell/fseek/ftello/fseeko/fgetpos/fsetpos 定位流
-- printf格式化输出
-- tmpnam/mkdtemp创建临时文件/目录
-- fmemopen 内存流--所有的I/O都是通过在缓冲区与主存之间来回传送字节来完成的。我们将看到，即便这些流看起来像文件流，它们的某些特征使其更适用于字符串操作
+
+* 标准I/O库提供缓冲的目的是尽可能减少使用read和write调用的次数, 提供了一个缓冲区设定
+* fwide--可用于设置流的定向，当最后一个参数为0时可以返回方向的信息
+* setbuf-- 设定缓冲区
+* fflush--冲洗缓冲区
+* fopen--打开流
+* getc/fgets--读流
+* putc/fputs--写流
+* fread/fwrite--二进制读写流
+* ftell/fseek/ftello/fseeko/fgetpos/fsetpos 定位流
+* printf格式化输出
+* tmpnam/mkdtemp创建临时文件/目录
+* fmemopen 内存流--所有的I/O都是通过在缓冲区与主存之间来回传送字节来完成的。我们将看到，即便这些流看起来像文件流，它们的某些特征使其更适用于字符串操作
+
 ---
 
 ### 4. 系统数据文件和信息
-- UNIX 系统口令文件这些字段包含在<pwd.h>中定义的passwd结构中。
-- struct passwd *getpwuid(uid_t uid)/struct passwd *getpwnam(const char *name)--返回登陆账号或姓名的口令文件
-- truct passwd *getpwent(void)/void setpwent(void)/void endpwent(void)-- 直接查看登录的全部用户口令文件
-- struct spwd *getspnam(const char *name)/struct spwd *getspent(void)/void setspent(void)/void endspent(void)--从阴影口令文件获得
-- struct group *getgrgid(gid_t gid)/struct group *getgrnam(const char *name)/struct group *getgrent(void)/void setgrent(void)/void endgrent(void)--返回组文件信息
-- int getgroups(int gidsetsize, gid_t grouplist[])/int setgroups(int ngroups, const gid_t grouplist[])/int initgroups(const char *username, gid_t basegid)--返回附属组文件信息
-- utmp文件记录当前登录到系统的各个用户；wtmp文件跟踪各个登录和注销事件--char ut_line[8]/char ut_name[8]/long　ut_time;
-- int uname(struct utsname *name)它返回与主机和操作系统有关的信息
-- time_t time(time_t *calptr)--日历时间；int clock_gettime(clockid_t clock_id, struct timespec *tsp)--文件时间
+
+* UNIX 系统口令文件这些字段包含在<pwd.h>中定义的passwd结构中。
+* struct passwd *getpwuid(uid_t uid)/struct passwd *getpwnam(const char *name)--返回登陆账号或姓名的口令文件
+* truct passwd *getpwent(void)/void setpwent(void)/void endpwent(void)-- 直接查看登录的全部用户口令文件
+* struct spwd *getspnam(const char *name)/struct spwd *getspent(void)/void setspent(void)/void endspent(void)--从阴影口令文件获得
+* struct group *getgrgid(gid_t gid)/struct group *getgrnam(const char *name)/struct group *getgrent(void)/void setgrent(void)/void endgrent(void)--返回组文件信息
+* int getgroups(int gidsetsize, gid_t grouplist[])/int setgroups(int ngroups, const gid_t grouplist[])/int initgroups(const char *username, gid_t basegid)--返回附属组文件信息
+* utmp文件记录当前登录到系统的各个用户；wtmp文件跟踪各个登录和注销事件--char ut_line[8]/char ut_name[8]/long　ut_time; 
+* int uname(struct utsname *name)它返回与主机和操作系统有关的信息
+* time_t time(time_t *calptr)--日历时间；int clock_gettime(clockid_t clock_id, struct timespec *tsp)--文件时间
+
 ---
